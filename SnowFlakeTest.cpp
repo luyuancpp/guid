@@ -7,8 +7,8 @@
 #include <unordered_set>
 #include <vector>
 
-using game_uuid_vetcor = std::vector<game::GameUuid>;
-using game_uuid_set = std::unordered_set<game::GameUuid, game::uuid_hash, game::uuid_equal>;
+using game_uuid_vetcor = std::vector<game::GameGuid>;
+using game_uuid_set = std::unordered_set<game::GameGuid, game::uuid_hash, game::uuid_equal>;
 
 game::SnowFlake t_sf;
 game_uuid_vetcor first_v;
@@ -44,7 +44,7 @@ void TestNormal()
     game::SnowFlake sf;
     time_t t = sf.GetNow();
     std::cout << t << std::endl;
-    game::GameUuid id = sf.Generate();
+    game::GameGuid id = sf.Generate();
     std::cout << std::get<1>(id) << std::endl;
 }
 

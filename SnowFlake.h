@@ -5,7 +5,7 @@
 #include <chrono>
 #include <cstdint>
 
-#include "GameUuid.h"
+#include "GameGuid.h"
 
 //https://dev.mysql.com/doc/refman/8.0/en/miscellaneous-functions.html#function_uuid
 
@@ -26,9 +26,9 @@ public:
     {
     }
 
-    game::GameUuid Generate()
+    game::GameGuid Generate()
     {
-        return game::GameUuid(server_id_flag_ ^ incremented_variable_.fetch_add(1),
+        return game::GameGuid(server_id_flag_ ^ incremented_variable_.fetch_add(1),
                GetNow());
     }
 
