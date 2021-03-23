@@ -10,14 +10,14 @@ using UiddHighType = uint64_t;
 using UiddLowType = uint64_t; //
 using GameGuid = std::tuple<UiddHighType, UiddLowType>;
 
-struct uuid_hash
+struct guid_hash
 {
     std::size_t operator() (const GameGuid& p) const {
         return std::hash<UiddHighType>{}(std::get<0>(p)) ^ std::hash<UiddLowType>{}(std::get<1>(p));
     }
 };
 
-struct uuid_equal
+struct guid_equal
 {
     bool operator() (const GameGuid& first, const GameGuid& second) const {
         return std::get<0>(first) == std::get<0>(second) && 

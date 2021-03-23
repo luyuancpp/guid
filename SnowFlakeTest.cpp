@@ -7,16 +7,16 @@
 #include <unordered_set>
 #include <vector>
 
-using game_uuid_vetcor = std::vector<game::GameGuid>;
-using game_uuid_set = std::unordered_set<game::GameGuid, game::uuid_hash, game::uuid_equal>;
+using game_guid_vetcor = std::vector<game::GameGuid>;
+using game_guid_set = std::unordered_set<game::GameGuid, game::guid_hash, game::guid_equal>;
 
 game::SnowFlake t_sf;
-game_uuid_vetcor first_v;
-game_uuid_vetcor second_v;
-game_uuid_vetcor third_v;
+game_guid_vetcor first_v;
+game_guid_vetcor second_v;
+game_guid_vetcor third_v;
 static const std::size_t kTestSize = 1000000;
 
-void EmplaceToVector(game_uuid_vetcor& v)
+void EmplaceToVector(game_guid_vetcor& v)
 {
     for (std::size_t i = 0; i < kTestSize; ++i)
     {
@@ -48,7 +48,7 @@ void TestNormal()
     std::cout << std::get<1>(id) << std::endl;
 }
 
-void PutVectorInToSet(game_uuid_set& s, game_uuid_vetcor& v)
+void PutVectorInToSet(game_guid_set& s, game_guid_vetcor& v)
 {
     for (auto& it : v)
     {
@@ -59,7 +59,7 @@ void PutVectorInToSet(game_uuid_set& s, game_uuid_vetcor& v)
 int32_t main()
 {
     TestNormal();
-    game_uuid_set guid_set;
+    game_guid_set guid_set;
     
     auto first_cb = std::bind(GenerateThread1);
     auto second_cb = std::bind(GenerateThread2);
