@@ -1,4 +1,4 @@
-#include "SnowFlake.h"
+//#include <gtest/gtest.h>
 
 #include <cassert>
 #include <functional>
@@ -7,10 +7,12 @@
 #include <unordered_set>
 #include <vector>
 
-using game_guid_vetcor = std::vector<game::GameGuid>;
-using game_guid_set = std::unordered_set<game::GameGuid, game::guid_hash, game::guid_equal>;
+#include "SnowFlake.h"
 
-game::SnowFlake t_sf;
+using game_guid_vetcor = std::vector<common::GameGuid>;
+using game_guid_set = std::unordered_set<common::GameGuid>;
+
+common::SnowFlake sf;
 game_guid_vetcor first_v;
 game_guid_vetcor second_v;
 game_guid_vetcor third_v;
@@ -20,13 +22,13 @@ void EmplaceToVector(game_guid_vetcor& v)
 {
     for (std::size_t i = 0; i < kTestSize; ++i)
     {
-        v.emplace_back(t_sf.Generate());
+        v.emplace_back(sf.Generate());
     }
 }
 
 void GenerateThread1()
 {
-    EmplaceToVector(first_v); 
+    EmplaceToVector(first_v);
 }
 
 void GenerateThread2()
@@ -39,15 +41,6 @@ void GenerateThread3()
     EmplaceToVector(third_v);
 }
 
-void TestNormal()
-{
-    game::SnowFlake sf;
-    time_t t = sf.GetNow();
-    std::cout << t << std::endl;
-    game::GameGuid id = sf.Generate();
-    std::cout << std::get<1>(id) << std::endl;
-}
-
 void PutVectorInToSet(game_guid_set& s, game_guid_vetcor& v)
 {
     for (auto& it : v)
@@ -56,11 +49,27 @@ void PutVectorInToSet(game_guid_set& s, game_guid_vetcor& v)
     }
 }
 
-int32_t main()
+void JustGenerateTime()
 {
-    TestNormal();
+    common::GameGuid id = sf.Generate();
+}
+
+void GenerateTime()
+{
+    common::SnowFlake sf;
+    time_t t = sf.GetNow();
+    std::cout << t << std::endl;
+    common::GameGuid id = sf.Generate();
+    std::cout << id << std::endl;
+}
+
+void Generate()
+{
     game_guid_set guid_set;
-    
+    first_v.clear();
+    second_v.clear();
+    third_v.clear();
+
     auto first_cb = std::bind(GenerateThread1);
     auto second_cb = std::bind(GenerateThread2);
     auto third_cb = std::bind(GenerateThread3);
@@ -68,8 +77,8 @@ int32_t main()
     std::thread second_thread(second_cb);
     std::thread third_thread(third_cb);
 
-    first_thread.join();                
-    second_thread.join();   
+    first_thread.join();
+    second_thread.join();
     third_thread.join();
 
     PutVectorInToSet(guid_set, first_v);
@@ -77,6 +86,13 @@ int32_t main()
     PutVectorInToSet(guid_set, third_v);
 
     assert(guid_set.size() == (first_v.size() + second_v.size() + third_v.size()));
+}
 
+int main(int argc, char** argv)
+{
+    for (int32_t i = 0 ; i < 1000; ++i)
+    {
+        Generate();
+    }
     return 0;
 }
